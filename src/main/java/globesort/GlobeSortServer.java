@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -87,12 +88,13 @@ public class GlobeSortServer {
         @Override
         public void sortIntegers(IntArray req, final StreamObserver<IntArray> responseObserver) {
             Integer[] values = req.getValuesList().toArray(new Integer[req.getValuesList().size()]);
+	    final long startTime = System.nanoTime();
             Arrays.sort(values);
             IntArray.Builder responseBuilder = IntArray.newBuilder();
             for(Integer val : values) {
                 responseBuilder.addValues(val);
             }
-            IntArray response = responseBuilder.build();
+            IntArray response = responseBuilder.setTime(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime)).build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }

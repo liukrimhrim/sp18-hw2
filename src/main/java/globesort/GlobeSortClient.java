@@ -47,8 +47,8 @@ public class GlobeSortClient {
 	System.out.println("Ping time: " + pingTime);
 
         System.out.println("Requesting server to sort array");
+	IntArray request = IntArray.newBuilder().addAllValues(Arrays.asList(values)).build();
 	final long startTime2 = System.nanoTime();
-        IntArray request = IntArray.newBuilder().addAllValues(Arrays.asList(values)).build();
         IntArray response = serverStub.sortIntegers(request);
 	long sortTimeClient = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime2);
         long sortTimeServer = response.getTime();
